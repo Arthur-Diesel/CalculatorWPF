@@ -4,6 +4,8 @@
              xmlns:local="clr-namespace:calculator"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <SolidColorBrush x:Key="numbersColor" Color="#444444"/>
+        <SolidColorBrush x:Key="operationsColor" Color="Orange"/>
+        <SolidColorBrush x:Key="textColor" Color="White" />
     </Application.Resources>
 </Application>

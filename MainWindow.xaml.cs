@@ -92,6 +92,7 @@ namespace calculator
         private void AcButton_Click(object sender, RoutedEventArgs e)
         {
             lastNumber = null;
+            result = 0;
             resultLabel.Content = "0";
         }
 
