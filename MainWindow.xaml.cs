@@ -22,7 +22,8 @@ namespace calculator
     /// </summary>
     public partial class MainWindow : Window
     {
-        double lastNumber, result;
+        double? lastNumber;
+        double result;
         SelectedOperator selectedOperator;
 
 
@@ -39,21 +40,22 @@ namespace calculator
         private void EqualButton_Click(object sender, RoutedEventArgs e)
         {
             double newNumber;
-            if (double.TryParse(resultLabel.Content.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out newNumber))
+            string input = resultLabel.Content.ToString().Replace(',', '.');
+            if (double.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out newNumber))
             {
                 switch (selectedOperator)
                 {
                     case SelectedOperator.Addition:
-                        result = SimpleMath.Add(lastNumber, newNumber);
+                        result = SimpleMath.Add(lastNumber.Value, newNumber);
                         break;
                     case SelectedOperator.Subtraction:
-                        result = SimpleMath.Subtract(lastNumber, newNumber);
+                        result = SimpleMath.Subtract(lastNumber.Value, newNumber);
                         break;
                     case SelectedOperator.Multiplication:
-                        result = SimpleMath.Multiply(lastNumber, newNumber);
+                        result = SimpleMath.Multiply(lastNumber.Value, newNumber);
                         break;
                     case SelectedOperator.Division:
-                        result = SimpleMath.Divide(lastNumber, newNumber);
+                        result = SimpleMath.Divide(lastNumber.Value, newNumber);
                         break;
                 }
                 resultLabel.Content = result.ToString();
@@ -62,32 +64,42 @@ namespace calculator
 
         private void PercentageButton_Click(object sender, RoutedEventArgs e)
         {
-            if (double.TryParse(resultLabel.Content.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out lastNumber))
+            if (lastNumber.HasValue)
             {
-                lastNumber = lastNumber / 100;
-                resultLabel.Content = lastNumber.ToString();
+                if(double.TryParse(resultLabel.Content.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out double parsedNumber))
+                {
+                    resultLabel.Content = parsedNumber / 100 * lastNumber.Value;
+                }
+            }
+            else
+            {
+                if (double.TryParse(resultLabel.Content.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out double parsedNumber))
+                {
+                    resultLabel.Content = parsedNumber / 100;
+                }
             }
         }
 
         private void NegativeButton_Click(object sender, RoutedEventArgs e)
         {
-            if(double.TryParse(resultLabel.Content.ToString(), out lastNumber))
+            if(double.TryParse(resultLabel.Content.ToString(), out double parsedNumber))
             {
-                lastNumber = -lastNumber;
+                lastNumber = -parsedNumber;
                 resultLabel.Content = lastNumber.ToString();
             }
         }
 
         private void AcButton_Click(object sender, RoutedEventArgs e)
         {
+            lastNumber = null;
             resultLabel.Content = "0";
         }
 
         private void OperationButton_Click(object sender, RoutedEventArgs e)
         {
-            if (double.TryParse(resultLabel.Content.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out lastNumber))
+            if (double.TryParse(resultLabel.Content.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out double parsedNumber))
             {
-                Debug.WriteLine(lastNumber);
+                lastNumber = parsedNumber;
                 resultLabel.Content = "0";
             }
 
